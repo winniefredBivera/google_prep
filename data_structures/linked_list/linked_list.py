@@ -1,47 +1,59 @@
 # linked list implementation
 
-class linked_list:
+class LinkedList:
     """interface for linked list"""
 
-    first_node = None
+    first_nod = None
+
+    def __init__(self):
+        self.first_node = None
 
     def is_empty(self):
         """return True if not empty"""
         output = True if self.first_node is None else False
         return output
 
-    def insert(self, node_element):
+    def insert_first(self, node_element):
         """insert a node in the link list"""
         node_element.next = self.first_node
         self.first_node = node_element
 
-    def search_element(self, value):
+    def search(self, value):
         """find first instance of a value in linked list"""
         current_element = self.first_node
-        output = None
 
         # edge case
         if current_element is None:
             print("No element is in the link list to search")
+            output = None
 
         # elements are present in the list
         else:
+            output = self._search_when_list_is_not_empty(value)
+        return output
 
-            while current_element.next is not None and current_element.element != value:
-                current_element = current_element.next
+    def _search_when_list_is_not_empty(self, value):
+        """search when we know that the list is not empty"""
+        current_element = self.first_node
 
-            if current_element.next is None:
-                print("reached end of the list")
+        while current_element.next is not None and current_element.element != value:
+            current_element = current_element.next
 
-            if current_element.element == value:
-                print("found element in list")
-                output = value
-            else:
-                print("element not found in list")
+        if current_element.next is None:
+            print("reached end of the list")
+            output = None
+
+        if current_element.element == value:
+            print("found element in list")
+            output = current_element
+
+        else:
+            print("element not found in list")
+            output = None
 
         return output
 
-    def delete_first_node(self):
+    def delete_first(self):
         """delete first node"""
         if self.first_node is None:
             print("nothing left to delete")
@@ -52,33 +64,75 @@ class linked_list:
             print("deleted first element")
             print("first element was: " + str(first_node.element))
 
-    def delete_element(self, value):
+    def delete(self, value):
         """delete first occurance from linked list"""
-        current_node = self.first_node
-        previous_node = None
+        current_node = previous_node = self.first_node
 
         # edge case: empty list
         if self.first_node is None:
             print("nothing is left to delete")
-
-        elif self.first_node.element == value:
-            # edge case: first element to be deleted
-            self.delete_first_node() 
-
         else:
+            self._delete_element_when_list_is_not_empty(value)
 
-            while current_node.next is not None and current_node.element != value:
-                
-                previous_node = current_node
-                current_node = current_node.next
+    def _delete_element_when_list_is_not_empty(self, value):
+        """special case when list is not empty"""
+        current_node = previous_node = self.first_node
 
-            if current_node.next is None and current_node.element != value:
-                print("reached end of the list")
-                print("element is not present in list")
-            
-            elif current_node.element == value:
-                print("element is found")
-                next_node = current_node.next
-                previous_node.next = next_node
-            else:
-                print("element is not present in linked list")
+        while current_node.next is not None and current_node.element != value:
+            previous_node = current_node
+            current_node = current_node.next
+
+        if current_node.next is None and current_node.element != value:
+            print("reached end of the list")
+            print("element is not present in list")
+
+        elif self.first_node.element == current_node.element == previous_node.element == value:
+            # edge case first node
+            self.delete_first()
+
+        elif current_node.element == value:
+            print("element is found")
+            next_node = current_node.next
+            previous_node.next = next_node
+        else:
+            print("element is not present in linked list")
+
+    def insert_sorted(self, node, ascending):
+        # if the linked list is empty, simply add
+        if self.first_node is None:
+            self.insert_first(node)
+        else:
+            self._insert_sorted_when_list_is_not_empty(node, ascending)
+
+    def _insert_sorted_when_list_is_not_empty(self, node, ascending):
+        if ascending is True:
+            self._insert_ascending(node)
+        else:
+            self._insert_descending(node)
+
+    def _insert_descending(self, node):
+        previous_node = current_node = self.first_node
+        while current_node.next is not None and current_node.element > node.element:
+            previous_node = current_node
+            current_node = current_node.next
+
+        previous_node.next = node
+        node.next = current_node
+
+    def _insert_ascending(self, node):
+        previous_node = current_node = self.first_node
+        while current_node.next is not None and current_node.element < node.element:
+            previous_node = current_node
+            current_node = current_node.next
+
+        previous_node.next = node
+        node.next = current_node
+
+    def parse_print(self):
+        current_node = self.first_node
+        self.parse_recursively(current_node)
+
+    def parse_recursively(self, node):
+        if node is not None:
+            print(node.element)
+            self.parse_recursively(node.next)

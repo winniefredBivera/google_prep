@@ -2,7 +2,7 @@
 linked list node
 """
 
-class node:
+class Node:
     """individual elements of a linked list"""
 
     element = None
