@@ -97,37 +97,6 @@ class LinkedList:
         else:
             print("element is not present in linked list")
 
-    def insert_sorted(self, node, ascending):
-        # if the linked list is empty, simply add
-        if self.first_node is None:
-            self.insert_first(node)
-        else:
-            self._insert_sorted_when_list_is_not_empty(node, ascending)
-
-    def _insert_sorted_when_list_is_not_empty(self, node, ascending):
-        if ascending is True:
-            self._insert_ascending(node)
-        else:
-            self._insert_descending(node)
-
-    def _insert_descending(self, node):
-        previous_node = current_node = self.first_node
-        while current_node.next is not None and current_node.element > node.element:
-            previous_node = current_node
-            current_node = current_node.next
-
-        previous_node.next = node
-        node.next = current_node
-
-    def _insert_ascending(self, node):
-        previous_node = current_node = self.first_node
-        while current_node.next is not None and current_node.element < node.element:
-            previous_node = current_node
-            current_node = current_node.next
-
-        previous_node.next = node
-        node.next = current_node
-
     def parse_print(self):
         current_node = self.first_node
         self.parse_recursively(current_node)
@@ -136,3 +105,40 @@ class LinkedList:
         if node is not None:
             print(node.element)
             self.parse_recursively(node.next)
+
+    def get_middle_node(self):
+        if self.first_node is None:
+            output = None
+        else:
+            current_node = pointer_2 = self.first_node
+            node_count = 0
+
+            while current_node.next is not None:
+                current_node = current_node.next
+                node_count = node_count+1
+                if node_count % 2 == 0:
+                    pointer_2 = pointer_2.next
+        return pointer_2
+
+    def no_of_nodes(self):
+        count = 0
+        current_element = self.first_node
+        while current_element.next is not None:
+            current_element = current_element.next
+            count = count + 1
+        return count
+
+    def get_n_nodes_before_last_node(self, n):
+        pointer_2 = current_element = self.first_node
+        record_count = 0
+
+        # get nth node first
+        for i in range(n):
+            current_element = current_element.next
+
+        while current_element.next is not None:
+            current_element = current_element.next
+            pointer_2 = pointer_2.next
+
+        return pointer_2
+
