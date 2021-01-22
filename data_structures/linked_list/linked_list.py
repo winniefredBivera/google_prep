@@ -57,12 +57,14 @@ class LinkedList:
         """delete first node"""
         if self.first_node is None:
             print("nothing left to delete")
+            return None
         else:
             first_node = self.first_node
             second_node = first_node.next
             self.first_node = second_node
             print("deleted first element")
             print("first element was: " + str(first_node.element))
+            return first_node.element
 
     def delete(self, value):
         """delete first occurance from linked list"""
@@ -142,3 +144,21 @@ class LinkedList:
 
         return pointer_2
 
+    def reverse(self):
+        first_node = previous = self.first_node
+        current = previous.next
+        next_node = current.next
+
+        while next_node.next is not None:
+            current.next = previous
+            previous = current
+            current = next_node
+            next_node = current.next
+        
+        #last node
+        current.next = previous
+        next_node.next = current
+        self.first_node = next_node
+
+        #first node
+        first_node.next = None
